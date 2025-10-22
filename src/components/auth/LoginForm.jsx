@@ -76,7 +76,7 @@ export default function LoginForm({ onLogin }) {
         </div>
       </div>
 
-      <div className="flex items-center justify-between">
+      {/* <div className="flex items-center justify-between">
         <div className="flex items-center">
           <input
             type="checkbox"
@@ -92,7 +92,7 @@ export default function LoginForm({ onLogin }) {
         <a href="#" className="text-sm text-blue-400 hover:text-blue-300">
           Forgot password?
         </a>
-      </div>
+      </div> */}
 
       <button
         type="submit"
@@ -102,12 +102,12 @@ export default function LoginForm({ onLogin }) {
         {loading ? "Signing in..." : "Sign In"}
       </button>
 
-      <p className="text-center text-sm text-zinc-400">
+      {/* <p className="text-center text-sm text-zinc-400">
         Don't have an account?{" "}
         <a href="#" className="text-blue-400 hover:text-blue-300">
           Sign up
         </a>
-      </p>
+      </p> */}
     </form>
   )
 }

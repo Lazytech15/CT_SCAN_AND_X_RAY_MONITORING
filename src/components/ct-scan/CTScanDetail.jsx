@@ -1,10 +1,10 @@
 // CTScanDetail.jsx
-import { CheckCircle } from "lucide-react"
+import { CheckCircle, Edit } from "lucide-react"
 import { useState, useEffect } from "react"
 import HematomaChart from "./HematomaChart"
 import apiService from "../../context/apiService"
 
-export default function CTScanDetail({ scan }) {
+export default function CTScanDetail({ scan, onEdit }) {
   const [imageUrl, setImageUrl] = useState(scan.imageUrl || scan.image_url || null)
   const [imageError, setImageError] = useState(false)
 
@@ -40,9 +40,20 @@ export default function CTScanDetail({ scan }) {
             <h2 className="text-2xl font-bold text-zinc-900 dark:text-white">{scan.patientName || scan.patient_name}</h2>
             <p className="text-sm text-zinc-600 dark:text-zinc-400 mt-1">ID: {scan.patientId || scan.patient_id}</p>
           </div>
-          <span className={`px-4 py-2 rounded-lg font-semibold ${getSeverityColor(scan.severity)}`}>
-            {scan.severity}
-          </span>
+          <div className="flex gap-2 items-center">
+            <span className={`px-4 py-2 rounded-lg font-semibold ${getSeverityColor(scan.severity)}`}>
+              {scan.severity}
+            </span>
+            {onEdit && (
+              <button
+                onClick={onEdit}
+                className="p-2 hover:bg-zinc-100 dark:hover:bg-zinc-700 rounded-lg transition-colors"
+                title="Edit CT Scan"
+              >
+                <Edit size={20} className="text-zinc-600 dark:text-zinc-400" />
+              </button>
+            )}
+          </div>
         </div>
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-4 border-t border-zinc-200 dark:border-zinc-700">

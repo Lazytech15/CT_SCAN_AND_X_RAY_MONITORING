@@ -405,7 +405,7 @@ export default function Profile({ onLogout, darkMode, setDarkMode }) {
         )}
       </div>
 
-      <div className="bg-white dark:bg-zinc-800 rounded-lg shadow-md p-6 border border-zinc-200 dark:border-zinc-700">
+      {/* <div className="bg-white dark:bg-zinc-800 rounded-lg shadow-md p-6 border border-zinc-200 dark:border-zinc-700">
         <h2 className="text-lg font-bold text-zinc-900 dark:text-white mb-4">Settings</h2>
         <div className="space-y-4">
           <div className="flex items-center justify-between p-4 bg-zinc-50 dark:bg-zinc-700/50 rounded-lg">
@@ -428,7 +428,7 @@ export default function Profile({ onLogout, darkMode, setDarkMode }) {
             </button>
           </div>
         </div>
-      </div>
+      </div> */}
 
       <div className="bg-white dark:bg-zinc-800 rounded-lg shadow-md p-6 border border-zinc-200 dark:border-zinc-700">
         <h2 className="text-lg font-bold text-zinc-900 dark:text-white mb-4">Session</h2>

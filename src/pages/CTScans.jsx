@@ -3,11 +3,13 @@
 import { useState, useEffect } from "react"
 import CTScanList from "../components/ct-scan/CTScanList"
 import CTScanDetail from "../components/ct-scan/CTScanDetail"
+import CTScanEdit from "../components/ct-scan/CTScanEdit"
 import { Search, Filter, AlertCircle } from "lucide-react"
 import apiService from "../context/apiService"
 
 export default function CTScans() {
   const [selectedScan, setSelectedScan] = useState(null)
+  const [editMode, setEditMode] = useState(false)
   const [searchTerm, setSearchTerm] = useState("")
   const [filterSeverity, setFilterSeverity] = useState("all")
   const [ctScans, setCtScans] = useState([])
@@ -30,6 +32,28 @@ export default function CTScans() {
       console.error('Error fetching CT scans:', err)
     } finally {
       setLoading(false)
+    }
+  }
+
+  const handleEdit = () => {
+    setEditMode(true)
+  }
+
+  const handleCancelEdit = () => {
+    setEditMode(false)
+  }
+
+  const handleSaveEdit = async (updatedScan) => {
+    try {
+      await apiService.ctScans.update(selectedScan.id, updatedScan)
+      // Refresh the list
+      await fetchCTScans()
+      // Update selected scan with new data
+      setSelectedScan(updatedScan)
+      setEditMode(false)
+    } catch (err) {
+      console.error('Error updating CT scan:', err)
+      throw err
     }
   }
 
@@ -109,10 +133,21 @@ export default function CTScans() {
             <CTScanList scans={filteredScans} selectedScan={selectedScan} onSelectScan={setSelectedScan} />
           </div>
 
-          {/* Detail */}
+          {/* Detail or Edit */}
           <div className="lg:col-span-2">
             {selectedScan ? (
-              <CTScanDetail scan={selectedScan} />
+              editMode ? (
+                <CTScanEdit 
+                  scan={selectedScan} 
+                  onCancel={handleCancelEdit}
+                  onSave={handleSaveEdit}
+                />
+              ) : (
+                <CTScanDetail 
+                  scan={selectedScan}
+                  onEdit={handleEdit}
+                />
+              )
             ) : (
               <div className="bg-white dark:bg-zinc-800 rounded-lg shadow-md p-8 text-center border border-zinc-200 dark:border-zinc-700">
                 <p className="text-zinc-600 dark:text-zinc-400">Select a CT scan to view details</p>

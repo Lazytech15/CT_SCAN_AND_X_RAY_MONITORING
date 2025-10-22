@@ -1,11 +1,13 @@
 import { useState, useEffect } from "react"
 import XRayList from "../components/xray/XRayList"
 import XRayDetail from "../components/xray/XRayDetail"
+import XRayEdit from "../components/xray/XRayEdit"
 import { Search, Filter, AlertCircle } from "lucide-react"
 import apiService from "../context/apiService"
 
 export default function XRays() {
   const [selectedXRay, setSelectedXRay] = useState(null)
+  const [editMode, setEditMode] = useState(false)
   const [searchTerm, setSearchTerm] = useState("")
   const [filterSeverity, setFilterSeverity] = useState("all")
   const [xrays, setXRays] = useState([])
@@ -28,6 +30,28 @@ export default function XRays() {
       console.error('Error fetching X-rays:', err)
     } finally {
       setLoading(false)
+    }
+  }
+
+  const handleEdit = () => {
+    setEditMode(true)
+  }
+
+  const handleCancelEdit = () => {
+    setEditMode(false)
+  }
+
+  const handleSaveEdit = async (updatedXRay) => {
+    try {
+      await apiService.xrays.update(selectedXRay.id, updatedXRay)
+      // Refresh the list
+      await fetchXRays()
+      // Update selected xray with new data
+      setSelectedXRay(updatedXRay)
+      setEditMode(false)
+    } catch (err) {
+      console.error('Error updating X-ray:', err)
+      throw err
     }
   }
 
@@ -107,10 +131,21 @@ export default function XRays() {
             <XRayList xrays={filteredXRays} selectedXRay={selectedXRay} onSelectXRay={setSelectedXRay} />
           </div>
 
-          {/* Detail */}
+          {/* Detail or Edit */}
           <div className="lg:col-span-2">
             {selectedXRay ? (
-              <XRayDetail xray={selectedXRay} />
+              editMode ? (
+                <XRayEdit 
+                  xray={selectedXRay} 
+                  onCancel={handleCancelEdit}
+                  onSave={handleSaveEdit}
+                />
+              ) : (
+                <XRayDetail 
+                  xray={selectedXRay}
+                  onEdit={handleEdit}
+                />
+              )
             ) : (
               <div className="bg-white dark:bg-zinc-800 rounded-lg shadow-md p-8 text-center border border-zinc-200 dark:border-zinc-700">
                 <p className="text-zinc-600 dark:text-zinc-400">Select an X-ray to view details</p>

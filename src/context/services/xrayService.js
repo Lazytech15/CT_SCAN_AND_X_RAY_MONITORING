@@ -24,15 +24,20 @@ export const uploadXRayImage = async (file, onProgress = null) => {
     }
 
     xhr.addEventListener('load', () => {
-      if (xhr.status === 200) {
+      if (xhr.status === 200 || xhr.status === 201) {
         try {
           const result = JSON.parse(xhr.responseText);
+          console.log('XHR Upload response:', result);
+          
+          // ✅ FIX: Your API returns { success: true, data: { url: "..." } }
+          // Check for success flag and resolve with the entire result
           if (result.success) {
-            resolve(result);
+            resolve(result);  // Return the whole result object
           } else {
             reject(new Error(result.message || 'Upload failed'));
           }
         } catch (error) {
+          console.error('JSON parse error:', error);
           reject(new Error('Invalid response from server'));
         }
       } else {

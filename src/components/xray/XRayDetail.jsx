@@ -1,10 +1,10 @@
 // XRayDetail.jsx
-import { CheckCircle, Thermometer, Wind, Zap } from "lucide-react"
+import { CheckCircle, Thermometer, Wind, Zap, Edit } from "lucide-react"
 import { useState, useEffect } from "react"
 import LungOpacityChart from "./LungOpacityChart"
 import apiService from "../../context/apiService"
 
-export default function XRayDetail({ xray }) {
+export default function XRayDetail({ xray, onEdit }) {
   const [imageUrl, setImageUrl] = useState(xray.imageUrl || xray.image_url || null)
   const [imageError, setImageError] = useState(false)
 
@@ -42,9 +42,20 @@ export default function XRayDetail({ xray }) {
             <h2 className="text-2xl font-bold text-zinc-900 dark:text-white">{xray.patientName || xray.patient_name}</h2>
             <p className="text-sm text-zinc-600 dark:text-zinc-400 mt-1">ID: {xray.patientId || xray.patient_id}</p>
           </div>
-          <span className={`px-4 py-2 rounded-lg font-semibold ${getSeverityColor(xray.severity)}`}>
-            {xray.severity}
-          </span>
+          <div className="flex gap-2 items-center">
+            <span className={`px-4 py-2 rounded-lg font-semibold ${getSeverityColor(xray.severity)}`}>
+              {xray.severity}
+            </span>
+            {onEdit && (
+              <button
+                onClick={onEdit}
+                className="p-2 hover:bg-zinc-100 dark:hover:bg-zinc-700 rounded-lg transition-colors"
+                title="Edit X-Ray"
+              >
+                <Edit size={20} className="text-zinc-600 dark:text-zinc-400" />
+              </button>
+            )}
+          </div>
         </div>
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-4 border-t border-zinc-200 dark:border-zinc-700">
