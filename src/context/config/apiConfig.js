@@ -16,4 +16,4 @@ export const API_CONFIG = {
   credentials: 'include', // For cookies if needed
 };
 
-export default API_BASE_URL;
+// export default API_BASE_URL;
