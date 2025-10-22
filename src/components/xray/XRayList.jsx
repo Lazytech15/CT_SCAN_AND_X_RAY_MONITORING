@@ -18,39 +18,102 @@ export default function XRayList({ xrays, selectedXRay, onSelectXRay }) {
     }
   }
 
+  const formatDate = (dateString) => {
+    if (!dateString) return 'No date'
+    
+    try {
+      // Handle MySQL datetime format: "2025-10-18 09:15:00"
+      // Replace space with 'T' to make it ISO 8601 compatible
+      const isoDate = dateString.replace(' ', 'T')
+      const date = new Date(isoDate)
+      
+      // Check if date is valid
+      if (isNaN(date.getTime())) {
+        return 'Invalid date'
+      }
+      
+      // Format the date
+      return date.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'
+      })
+    } catch (error) {
+      console.error('Error formatting date:', error)
+      return 'Invalid date'
+    }
+  }
+
+  const formatTime = (dateString) => {
+    if (!dateString) return ''
+    
+    try {
+      const isoDate = dateString.replace(' ', 'T')
+      const date = new Date(isoDate)
+      
+      if (isNaN(date.getTime())) {
+        return ''
+      }
+      
+      return date.toLocaleTimeString('en-US', {
+        hour: '2-digit',
+        minute: '2-digit'
+      })
+    } catch (error) {
+      return ''
+    }
+  }
+
   return (
     <div className="bg-white dark:bg-zinc-800 rounded-lg shadow-md border border-zinc-200 dark:border-zinc-700 overflow-hidden">
       <div className="p-4 border-b border-zinc-200 dark:border-zinc-700">
         <h2 className="font-bold text-zinc-900 dark:text-white">X-Rays ({xrays.length})</h2>
       </div>
       <div className="divide-y divide-zinc-200 dark:divide-zinc-700 max-h-96 overflow-y-auto">
-        {xrays.map((xray) => (
-          <button
-            key={xray.id}
-            onClick={() => onSelectXRay(xray)}
-            className={`w-full text-left p-4 transition-colors ${
-              selectedXRay?.id === xray.id
-                ? "bg-blue-50 dark:bg-blue-900/20 border-l-4 border-blue-500"
-                : "hover:bg-zinc-50 dark:hover:bg-zinc-700/50"
-            }`}
-          >
-            <div className="flex items-start justify-between gap-2">
-              <div className="flex-1">
-                <p className="font-semibold text-zinc-900 dark:text-white text-sm">{xray.patientName}</p>
-                <p className="text-xs text-zinc-600 dark:text-zinc-400 mt-1">{xray.procedure}</p>
-                <div className="flex items-center gap-1 mt-2 text-xs text-zinc-500 dark:text-zinc-500">
-                  <Clock size={12} />
-                  {new Date(xray.scanDate).toLocaleDateString()}
+        {xrays.length === 0 ? (
+          <div className="p-8 text-center text-zinc-500 dark:text-zinc-400">
+            No X-rays found
+          </div>
+        ) : (
+          xrays.map((xray) => (
+            <button
+              key={xray.id}
+              onClick={() => onSelectXRay(xray)}
+              className={`w-full text-left p-4 transition-colors ${
+                selectedXRay?.id === xray.id
+                  ? "bg-blue-50 dark:bg-blue-900/20 border-l-4 border-blue-500"
+                  : "hover:bg-zinc-50 dark:hover:bg-zinc-700/50"
+              }`}
+            >
+              <div className="flex items-start justify-between gap-2">
+                <div className="flex-1">
+                  <p className="font-semibold text-zinc-900 dark:text-white text-sm">
+                    {xray.patientName || xray.patient_name || 'Unknown Patient'}
+                  </p>
+                  <p className="text-xs text-zinc-600 dark:text-zinc-400 mt-1">
+                    {xray.procedure || xray.scan_type || xray.type || 'X-Ray Scan'}
+                  </p>
+                  <div className="flex items-center gap-1 mt-2 text-xs text-zinc-500 dark:text-zinc-500">
+                    <Clock size={12} />
+                    <span>
+                      {formatDate(xray.scanDate || xray.scan_date || xray.date || xray.created_at)}
+                    </span>
+                    {formatTime(xray.scanDate || xray.scan_date || xray.date || xray.created_at) && (
+                      <span className="ml-1">
+                        • {formatTime(xray.scanDate || xray.scan_date || xray.date || xray.created_at)}
+                      </span>
+                    )}
+                  </div>
                 </div>
+                <span
+                  className={`px-2 py-1 rounded text-xs font-semibold whitespace-nowrap border ${getSeverityColor(xray.severity)}`}
+                >
+                  {xray.severity || 'Stable'}
+                </span>
               </div>
-              <span
-                className={`px-2 py-1 rounded text-xs font-semibold whitespace-nowrap border ${getSeverityColor(xray.severity)}`}
-              >
-                {xray.severity}
-              </span>
-            </div>
-          </button>
-        ))}
+            </button>
+          ))
+        )}
       </div>
     </div>
   )

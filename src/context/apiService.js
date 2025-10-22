@@ -2,6 +2,7 @@
 import * as authService from './services/auth';
 import * as xrayService from './services/xrayService';
 import * as ctScanService from './services/ctScanService';
+import * as userService from './services/userService';
 
 /**
  * Central API Service
@@ -14,6 +15,17 @@ const apiService = {
   isAuthenticated: authService.isAuthenticated,
   getCurrentUser: authService.getCurrentUser,
   getToken: authService.getToken,
+  
+  // User Profile methods
+  users: {
+    getProfile: userService.getProfile,
+    getAll: userService.getAllUsers,
+    update: userService.updateProfile,
+    changePassword: userService.changePassword,
+    uploadProfileImage: userService.uploadProfileImage,
+    create: userService.createUser,
+    delete: userService.deleteUser,
+  },
   
   // X-Ray methods
   xrays: {

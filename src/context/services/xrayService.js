@@ -1,7 +1,5 @@
-// ============================================
 // services/xrayService.js
-
-const XRAY_API_BASE_URL = 'http://qxw.2ee.mytemp.website/projectipt2/api/xrays_api.php';
+import { API_ENDPOINTS, API_CONFIG } from '../config/apiConfig';
 
 /**
  * Upload an image for X-Ray
@@ -46,7 +44,7 @@ export const uploadXRayImage = async (file, onProgress = null) => {
       reject(new Error('Network error during upload'));
     });
 
-    xhr.open('POST', `${XRAY_API_BASE_URL}?action=upload`);
+    xhr.open('POST', `${API_ENDPOINTS.XRAYS}?action=upload`);
     xhr.send(formData);
   });
 };
@@ -63,8 +61,11 @@ export const getAllXRays = async (searchTerm = '', severity = 'all') => {
     if (searchTerm) params.append('search', searchTerm);
     if (severity !== 'all') params.append('severity', severity);
     
-    const url = `${XRAY_API_BASE_URL}${params.toString() ? '?' + params.toString() : ''}`;
-    const response = await fetch(url);
+    const url = `${API_ENDPOINTS.XRAYS}${params.toString() ? '?' + params.toString() : ''}`;
+    const response = await fetch(url, {
+      method: 'GET',
+      ...API_CONFIG,
+    });
     
     if (!response.ok) {
       throw new Error('Failed to fetch X-rays');
@@ -78,8 +79,7 @@ export const getAllXRays = async (searchTerm = '', severity = 'all') => {
     
     return result.data;
   } catch (error) {
-    console.error('Error fetching X-rays:', error);
-    throw error;
+    throw new Error(error.message || 'Network error occurred');
   }
 };
 
@@ -90,7 +90,10 @@ export const getAllXRays = async (searchTerm = '', severity = 'all') => {
  */
 export const getXRayById = async (id) => {
   try {
-    const response = await fetch(`${XRAY_API_BASE_URL}?id=${id}`);
+    const response = await fetch(`${API_ENDPOINTS.XRAYS}?id=${id}`, {
+      method: 'GET',
+      ...API_CONFIG,
+    });
     
     if (!response.ok) {
       throw new Error('Failed to fetch X-ray');
@@ -104,8 +107,7 @@ export const getXRayById = async (id) => {
     
     return result.data;
   } catch (error) {
-    console.error('Error fetching X-ray:', error);
-    throw error;
+    throw new Error(error.message || 'Network error occurred');
   }
 };
 
@@ -116,11 +118,9 @@ export const getXRayById = async (id) => {
  */
 export const createXRay = async (xrayData) => {
   try {
-    const response = await fetch(XRAY_API_BASE_URL, {
+    const response = await fetch(API_ENDPOINTS.XRAYS, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      ...API_CONFIG,
       body: JSON.stringify(xrayData),
     });
     
@@ -136,8 +136,7 @@ export const createXRay = async (xrayData) => {
     
     return result;
   } catch (error) {
-    console.error('Error creating X-ray:', error);
-    throw error;
+    throw new Error(error.message || 'Network error occurred');
   }
 };
 
@@ -149,11 +148,9 @@ export const createXRay = async (xrayData) => {
  */
 export const updateXRay = async (id, xrayData) => {
   try {
-    const response = await fetch(`${XRAY_API_BASE_URL}?id=${id}`, {
+    const response = await fetch(`${API_ENDPOINTS.XRAYS}?id=${id}`, {
       method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      ...API_CONFIG,
       body: JSON.stringify(xrayData),
     });
     
@@ -169,8 +166,7 @@ export const updateXRay = async (id, xrayData) => {
     
     return result;
   } catch (error) {
-    console.error('Error updating X-ray:', error);
-    throw error;
+    throw new Error(error.message || 'Network error occurred');
   }
 };
 
@@ -181,8 +177,9 @@ export const updateXRay = async (id, xrayData) => {
  */
 export const deleteXRay = async (id) => {
   try {
-    const response = await fetch(`${XRAY_API_BASE_URL}?id=${id}`, {
+    const response = await fetch(`${API_ENDPOINTS.XRAYS}?id=${id}`, {
       method: 'DELETE',
+      ...API_CONFIG,
     });
     
     if (!response.ok) {
@@ -197,7 +194,6 @@ export const deleteXRay = async (id) => {
     
     return result;
   } catch (error) {
-    console.error('Error deleting X-ray:', error);
-    throw error;
+    throw new Error(error.message || 'Network error occurred');
   }
 };

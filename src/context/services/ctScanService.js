@@ -1,6 +1,5 @@
 // services/ctScanService.js
-
-const API_BASE_URL = 'http://qxw.2ee.mytemp.website/projectipt2/api/ct_scans_api.php';
+import { API_ENDPOINTS, API_CONFIG } from '../config/apiConfig';
 
 /**
  * Upload an image for CT Scan
@@ -45,7 +44,7 @@ export const uploadCTScanImage = async (file, onProgress = null) => {
       reject(new Error('Network error during upload'));
     });
 
-    xhr.open('POST', `${API_BASE_URL}?action=upload`);
+    xhr.open('POST', `${API_ENDPOINTS.CT_SCANS}?action=upload`);
     xhr.send(formData);
   });
 };
@@ -62,8 +61,11 @@ export const getAllCTScans = async (searchTerm = '', severity = 'all') => {
     if (searchTerm) params.append('search', searchTerm);
     if (severity !== 'all') params.append('severity', severity);
     
-    const url = `${API_BASE_URL}${params.toString() ? '?' + params.toString() : ''}`;
-    const response = await fetch(url);
+    const url = `${API_ENDPOINTS.CT_SCANS}${params.toString() ? '?' + params.toString() : ''}`;
+    const response = await fetch(url, {
+      method: 'GET',
+      ...API_CONFIG,
+    });
     
     if (!response.ok) {
       throw new Error('Failed to fetch CT scans');
@@ -77,8 +79,7 @@ export const getAllCTScans = async (searchTerm = '', severity = 'all') => {
     
     return result.data;
   } catch (error) {
-    console.error('Error fetching CT scans:', error);
-    throw error;
+    throw new Error(error.message || 'Network error occurred');
   }
 };
 
@@ -89,7 +90,10 @@ export const getAllCTScans = async (searchTerm = '', severity = 'all') => {
  */
 export const getCTScanById = async (id) => {
   try {
-    const response = await fetch(`${API_BASE_URL}?id=${id}`);
+    const response = await fetch(`${API_ENDPOINTS.CT_SCANS}?id=${id}`, {
+      method: 'GET',
+      ...API_CONFIG,
+    });
     
     if (!response.ok) {
       throw new Error('Failed to fetch CT scan');
@@ -103,8 +107,7 @@ export const getCTScanById = async (id) => {
     
     return result.data;
   } catch (error) {
-    console.error('Error fetching CT scan:', error);
-    throw error;
+    throw new Error(error.message || 'Network error occurred');
   }
 };
 
@@ -115,11 +118,9 @@ export const getCTScanById = async (id) => {
  */
 export const createCTScan = async (scanData) => {
   try {
-    const response = await fetch(API_BASE_URL, {
+    const response = await fetch(API_ENDPOINTS.CT_SCANS, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      ...API_CONFIG,
       body: JSON.stringify(scanData),
     });
     
@@ -135,8 +136,7 @@ export const createCTScan = async (scanData) => {
     
     return result;
   } catch (error) {
-    console.error('Error creating CT scan:', error);
-    throw error;
+    throw new Error(error.message || 'Network error occurred');
   }
 };
 
@@ -148,11 +148,9 @@ export const createCTScan = async (scanData) => {
  */
 export const updateCTScan = async (id, scanData) => {
   try {
-    const response = await fetch(`${API_BASE_URL}?id=${id}`, {
+    const response = await fetch(`${API_ENDPOINTS.CT_SCANS}?id=${id}`, {
       method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      ...API_CONFIG,
       body: JSON.stringify(scanData),
     });
     
@@ -168,8 +166,7 @@ export const updateCTScan = async (id, scanData) => {
     
     return result;
   } catch (error) {
-    console.error('Error updating CT scan:', error);
-    throw error;
+    throw new Error(error.message || 'Network error occurred');
   }
 };
 
@@ -180,8 +177,9 @@ export const updateCTScan = async (id, scanData) => {
  */
 export const deleteCTScan = async (id) => {
   try {
-    const response = await fetch(`${API_BASE_URL}?id=${id}`, {
+    const response = await fetch(`${API_ENDPOINTS.CT_SCANS}?id=${id}`, {
       method: 'DELETE',
+      ...API_CONFIG,
     });
     
     if (!response.ok) {
@@ -196,7 +194,6 @@ export const deleteCTScan = async (id) => {
     
     return result;
   } catch (error) {
-    console.error('Error deleting CT scan:', error);
-    throw error;
+    throw new Error(error.message || 'Network error occurred');
   }
 };
