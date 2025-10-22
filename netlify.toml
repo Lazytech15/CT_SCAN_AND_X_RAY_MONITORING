@@ -2,8 +2,11 @@
   command = "npm run build"
   publish = "dist"
 
-[context.production.environment]
-  VITE_API_URL = "http://qxw.2ee.mytemp.website/projectipt2/api"
+[[redirects]]
+  from = "/api/*"
+  to = "http://qxw.2ee.mytemp.website/projectipt2/api/:splat"
+  status = 200
+  force = true
 
 [[redirects]]
   from = "/*"

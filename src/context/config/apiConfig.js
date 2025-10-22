@@ -1,11 +1,11 @@
 // apiConfig.js
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://qxw.2ee.mytemp.website/projectipt2/api';
+// const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://qxw.2ee.mytemp.website/projectipt2/api';
 
 export const API_ENDPOINTS = {
-  AUTH: `${API_BASE_URL}/auth.php`,
-  CT_SCANS: `${API_BASE_URL}/ct_scans_api.php`,
-  XRAYS: `${API_BASE_URL}/xrays_api.php`,
+  AUTH: `/auth.php`,
+  CT_SCANS: `/ct_scans_api.php`,
+  XRAYS: `/xrays_api.php`,
   // Add more endpoints here as needed
 };
 
