@@ -3,9 +3,9 @@
 // const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://qxw.2ee.mytemp.website/projectipt2/api';
 
 export const API_ENDPOINTS = {
-  AUTH: `/auth.php`,
-  CT_SCANS: `/ct_scans_api.php`,
-  XRAYS: `/xrays_api.php`,
+  AUTH: `/api/auth.php`,
+  CT_SCANS: `/api/ct_scans_api.php`,
+  XRAYS: `/api/xrays_api.php`,
   // Add more endpoints here as needed
 };
 
