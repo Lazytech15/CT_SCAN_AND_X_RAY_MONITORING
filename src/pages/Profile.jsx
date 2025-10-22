@@ -200,7 +200,8 @@ export default function Profile({ onLogout, darkMode, setDarkMode }) {
             <div className="w-24 h-24 rounded-full bg-zinc-200 dark:bg-zinc-700 flex items-center justify-center overflow-hidden">
               {profile?.profile_image ? (
                 <img
-                  src={`http://qxw.2ee.mytemp.website/projectipt2/api/${profile.profile_image}`}
+                // src={`http://qxw.2ee.mytemp.website/projectipt2/api/${profile.profile_image}`}
+                  src={`/api/${profile.profile_image}`}
                   alt="Profile"
                   className="w-full h-full object-cover"
                 />
